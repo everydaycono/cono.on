@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  mysql-db:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=notion
+      - MYSQL_USER=notionmaster
+      - MYSQL_PASSWORD=notionmasterpassword
+volumes:
+  db-data:
