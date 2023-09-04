@@ -20,12 +20,7 @@ app.get('/', (req, res) => {
     if (err) throw err;
 
     if (result.length === 0) {
-      return res.status(200).json({
-        breadScrumb: 'Home',
-        title: 'Home Page',
-        content: 'This is Home Page you can go to other pages with sub-pages',
-        subPages: [],
-      });
+      return res.status(200).json();
     }
     res.status(200).json({
       breadScrumb: 'Home',
@@ -95,8 +90,7 @@ app.get('/:pageId', (req, res) => {
           });
         }
 
-        console.log(result, 2);
-        console.log(subResult, 2);
+        console.log(2);
         res.status(200).json({
           title: 'Home Page',
           content: 'This is Home Page you can go to other pages with sub-pages',
@@ -128,7 +122,9 @@ app.post('/', (req, res) => {
   const values = [title, content];
   connection.query(query, values, (err, result) => {
     if (err) throw err;
-    res.json(201).json(result);
+    res.send({
+      message: 'Page Created successfully',
+    });
   });
 });
 
@@ -214,7 +210,6 @@ connection.connect(function (err) {
       content TEXT,
       parent_page_id INT DEFAULT NULL
     )    
-    
     `,
     function (err, result) {
       if (err) throw err;

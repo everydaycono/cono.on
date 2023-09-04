@@ -1,31 +1,87 @@
 CREATE TABLE
-    pages (
+    IF NOT EXISTS pages (
         id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255),
         content TEXT,
-        parent_page_id INT,
-        FOREIGN KEY (parent_page_id) REFERENCES pages (id)
+        parent_page_id INT DEFAULT NULL
     );
 
 INSERT INTO
-    pages (title, content, parent_page_id)
+    pages (id, title, content, parent_page_id)
 VALUES
-    ('목표', 'root 페이지 콘텐츠', NULL);
+    (1, 'A', '페이지 A', NULL);
 
--- sub page A 추가
 INSERT INTO
-    pages (title, content, parent_page_id)
+    pages (id, title, content, parent_page_id)
 VALUES
-    ('plan', '2023-09-03 subpage', 15);
+    (2, 'B', '페이지 B', NULL);
 
--- sub page A-1 추가
 INSERT INTO
-    pages (title, content, parent_page_id)
+    pages (id, title, content, parent_page_id)
 VALUES
-    ('A-1', 'A-1 페이지 콘텐츠', 2);
+    (3, 'C', '페이지 C', NULL);
 
--- sub page A-1-a 추가
 INSERT INTO
-    pages (title, content, parent_page_id)
+    pages (id, title, content, parent_page_id)
 VALUES
-    ('A-1-a', 'A-1-a 페이지 콘텐츠', 3);
+    (4, 'Apple', 'Apple', 1);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (5, 'Armond', 'Armond', 1);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (6, 'Banana', 'Banana', 2);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (7, 'Benz', 'Benz page', 2);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (8, 'Apple watch', 'apple watch', 4);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (9, 'Apple mango', 'apple mango', 4);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (10, 'Apple hip', 'apple hip', 4);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (11, 'Armond chocolate', 'Armond', 5);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (12, 'Armond nugget', 'Armond nugget', 5);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (13, 'S1', 'apple watch 1', 8);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (14, 'S2', 'apple watch 2', 8);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (15, 'S3', 'apple watch 3', 8);
+
+INSERT INTO
+    pages (id, title, content, parent_page_id)
+VALUES
+    (16, 'S4', 'apple watch 4', 8);
