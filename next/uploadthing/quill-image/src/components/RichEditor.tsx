@@ -3,6 +3,10 @@ import { useRef, useState } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+//@ts-ignore
+import ImageResize from 'quill-image-resize';
+Quill.register('modules/ImageResize', ImageResize);
+
 import { uploadFiles } from '@/utils/uploadthing';
 
 const RichEditor = () => {
@@ -66,6 +70,9 @@ const RichEditor = () => {
       handlers: {
         image: imageHandler,
       },
+    },
+    ImageResize: {
+      parchment: Quill.import('parchment'),
     },
   };
   return (
