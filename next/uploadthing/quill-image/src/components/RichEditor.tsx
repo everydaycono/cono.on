@@ -1,54 +1,84 @@
 'use client';
-
-import dynamic from 'next/dynamic';
+import { useRef, useState } from 'react';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import type ReactQuill from 'react-quill';
-const QuillWrapper = dynamic(
-  async () => {
-    const { default: RQ } = await import('react-quill');
-    // eslint-disable-next-line react/display-name
-    return ({ ...props }) => <RQ {...props} />;
-  },
-  {
-    ssr: false,
-  }
-) as typeof ReactQuill;
 
-export default QuillWrapper;
+import { uploadFiles } from '@/utils/uploadthing';
 
-export const modules = {
-  toolbar: [
-    [{ header: '1' }, { header: '2' }, { font: [] }],
-    [{ size: [] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [
-      { list: 'ordered' },
-      { list: 'bullet' },
-      { indent: '-1' },
-      { indent: '+1' },
-    ],
-    ['link', 'image', 'video'],
-    ['clean'],
-  ],
-  clipboard: {
-    // toggle to add extra line breaks when pasting HTML:
-    matchVisual: false,
-  },
+const RichEditor = () => {
+  const quillRef = useRef<ReactQuill>(null);
+
+  const imageHandler = async () => {
+    const input = document.createElement('input');
+
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+    input.onchange = async () => {
+      const file: File | null = input && input.files ? input.files[0] : null;
+      if (quillRef.current && file) {
+        let quillObj = quillRef.current.getEditor();
+
+        try {
+          const uploadFile = await uploadFiles({
+            files: [new File([file], file.name, { type: file.type })],
+            endpoint: 'imageUploader',
+            onUploadBegin: () => {
+              alert('upload has begun');
+            },
+            onUploadProgress: (progress) => {
+              console.log(progress);
+            },
+          });
+
+          const range = quillObj.getSelection()?.index ?? 1;
+          quillObj.setSelection(range, 1);
+
+          const uploadImg = uploadFile[0];
+          quillObj?.clipboard.dangerouslyPasteHTML(
+            range,
+            `<img src=${uploadImg.url} alt=${uploadImg.name} />`
+          );
+        } catch (error) {
+          console.error(error, 'This is an error message');
+          return false;
+        }
+      }
+    };
+  };
+
+  const modules = {
+    toolbar: {
+      container: [
+        //[{ 'font': [] }],
+        [{ header: [1, 2, 3, 4, false] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [
+          { list: 'ordered' },
+          { list: 'bullet' },
+          { indent: '-1' },
+          { indent: '+1' },
+        ],
+        ['link', 'image'],
+        [{ align: [] }, { color: [] }, { background: [] }], // dropdown with defaults from theme
+        ['clean'],
+      ],
+      handlers: {
+        image: imageHandler,
+      },
+    },
+  };
+  return (
+    <ReactQuill
+      style={{ height: '600px', maxWidth: '1000px' }}
+      ref={quillRef}
+      theme="snow"
+      modules={modules}
+      onChange={(event) => {
+        console.log(event);
+      }}
+    />
+  );
 };
 
-export const formats = [
-  'header',
-  'font',
-  'size',
-  'bold',
-  'italic',
-  'underline',
-  'strike',
-  'blockquote',
-  'list',
-  'bullet',
-  'indent',
-  'link',
-  'image',
-  'video',
-];
+export default RichEditor;
