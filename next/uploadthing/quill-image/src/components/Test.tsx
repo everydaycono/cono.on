@@ -1,20 +1,21 @@
 // 'use client';
-// import { useRef, useState } from 'react';
-// import ReactQuill, { Quill } from 'react-quill';
+// import dynamic from 'next/dynamic';
+// import { useCallback, useEffect, useRef, useState } from 'react';
 // import 'react-quill/dist/quill.snow.css';
+// import type ReactQuill from 'react-quill';
+// const QuillWrapper = dynamic(() => import('react-quill'), {
+//   ssr: false,
+//   loading: () => <p>Loading ...</p>,
+// });
 
-// //@ts-ignore
-// import ImageResize from 'quill-image-resize';
-// Quill.register('modules/ImageResize', ImageResize);
-
-// import { uploadFiles } from '@/utils/uploadthing';
-
-// const RichEditor = () => {
+// export default function Test() {
+//   const [isMounted, setIsMounted] = useState<boolean>(false);
 //   const quillRef = useRef<ReactQuill>(null);
+//   const imageHanlder = useCallback(async () => {
+//     if (!isMounted) return;
+//     if (typeof window !== 'undefined') return;
 
-//   const imageHandler = async () => {
 //     const input = document.createElement('input');
-
 //     input.setAttribute('type', 'file');
 //     input.setAttribute('accept', 'image/*');
 //     input.click();
@@ -37,7 +38,6 @@
 
 //           const range = quillObj.getSelection()?.index ?? 1;
 //           quillObj.setSelection(range, 1);
-
 //           const uploadImg = uploadFile[0];
 //           quillObj?.clipboard.dangerouslyPasteHTML(
 //             range,
@@ -49,8 +49,7 @@
 //         }
 //       }
 //     };
-//   };
-
+//   }, [isMounted]);
 //   const modules = {
 //     toolbar: {
 //       container: [
@@ -67,25 +66,46 @@
 //         [{ align: [] }, { color: [] }, { background: [] }], // dropdown with defaults from theme
 //         ['clean'],
 //       ],
-//       handlers: {
-//         image: imageHandler,
+//       handler: {
+//         image: imageHanlder,
 //       },
 //     },
-//     ImageResize: {
-//       parchment: Quill.import('parchment'),
-//     },
 //   };
+
+//   const formats = [
+//     'header',
+//     'font',
+//     'size',
+//     'bold',
+//     'italic',
+//     'underline',
+//     'strike',
+//     'blockquote',
+//     'list',
+//     'bullet',
+//     'indent',
+//     'link',
+//     'image',
+//     'video',
+//   ];
+
+//   useEffect(() => {
+//     if (typeof window !== 'undefined') {
+//       setIsMounted(true);
+//     }
+//   }, []);
+
+//   if (!isMounted) return null;
+
 //   return (
-//     <ReactQuill
-//       style={{ height: '600px', maxWidth: '1000px' }}
+//     <QuillWrapper
 //       ref={quillRef}
+//       style={{ height: '600px', maxWidth: '1000px' }}
 //       theme="snow"
 //       modules={modules}
-//       onChange={(event) => {
-//         console.log(event);
-//       }}
+//       formats={formats}
 //     />
 //   );
-// };
-
-// export default RichEditor;
+// }
+// Type '{ ref: RefObject<ReactQuill>; style: { height: string; maxWidth: string; }; theme: string; modules: { toolbar: { container: (string[] | { header: (number | boolean)[]; }[] | ({ ...; } | { ...; })[] | ({ ...; } | ... 1 more ... | { ...; })[])[]; handler: { ...; }; }; }; formats: string[]; }' is not assignable to type 'IntrinsicAttributes & ReactQuillProps'.
+//   Property 'ref' does not exist on type 'IntrinsicAttributes & ReactQuillProps'
